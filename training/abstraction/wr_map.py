@@ -1,35 +1,11 @@
-from numpy import average
-from pypokerengine.utils.card_utils import gen_cards, gen_deck, estimate_hole_card_win_rate
-# from execution_time import ExecutionTime
+from pypokerengine.utils.card_utils import gen_deck, estimate_hole_card_win_rate
 import matplotlib.pyplot as plt
-from .WRNodes import Conn, WRNode, WRNatureNode
-from .caches.caching import save, load_file
+from .WRNodes import WRNode, WRNatureNode
 
-# e = ExecutionTime()
 
-# N_NODES = 4
-# NODE_WRS = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9]
 NODE_WRS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
-# NODE_WRS = [0.2, 0.5, 0.8]
 N_LEVELS = 4
 N_TESTS = 100
-
-
-#creates WRNode map
-# def create_wr_map():
-#     inc = 1 / (N_NODES - 1)
-#     nodes = [[WRNode(0.5)]]
-#     for level in range(1, N_LEVELS + 1):
-#         nodes.append([])
-        
-#         for node_i in range(N_NODES):
-#             nodes[level].append( WRNode(inc * node_i) )
-
-#         for node_p in nodes[level - 1]:
-#             for node_c in nodes[level]:
-#                 node_p.add_child(node_c)
-
-#     return nodes 
 
 
 def create_wr_map():
@@ -75,7 +51,6 @@ def sim_nature(nodes):
         comm = comm + deck.draw_cards(comm_deal)
         wr = estimate_hole_card_win_rate(nb_simulation=N_TESTS, nb_player=2, hole_card=hole, community_card=comm)
         _next = get_node(wr, nodes[i])
-        # print(wr, _next.wr)
         curr.adjust_for(_next)
         curr = _next
         i += 1
@@ -84,7 +59,6 @@ def sim_nature(nodes):
 def create_nature_tree(wr_map):
 
     def rec_build_tree(node):
-        # print(len(node.get_children()), node.is_final)
         for child in node.get_children():
             rec_build_tree(child)
 

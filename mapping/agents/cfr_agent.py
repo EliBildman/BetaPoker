@@ -78,7 +78,6 @@ class CFRAgent:
         return choice
 
 
-#should prolly move this somewhere better
 #his: [{"type": "N", "wr": int} | {"type": "D", "name": str}]
 def make_str_rep(player, round_i, curr_pot, his):
         his_s = ""

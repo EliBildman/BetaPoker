@@ -7,7 +7,7 @@ info_sets_dic = {}
 def init_all_strats():
     for i in info_sets:
         i.init_strat()
-        
+
 #his: [{"type": "N", "wr": int} | {"type": "D", "name": str, "amount": int|None}]
 def make_str_rep(player, round_i, curr_pot, his):
         his_s = ""
@@ -91,9 +91,7 @@ class AGameNode():
                 return 1.0
 
             info_set = self.parent.get_info_set()
-            # print(self.parent)
             return info_set.p_action(self.inner_node.last_action)
-            # return p_action(info_set, self.inner_node.last_action)
             #calculate based on strategy profile of player at parent node, or 1.0 if parent is nature
 
     #gets move history from last nature to here

@@ -38,8 +38,6 @@ class DecisionNode():
         new_state.stacks[player] -= call_amount
         new_state.turn += 1
 
-        # ends_round = new_state.turn >= new_state.n_players
-
         act = Action(player, Move('call', amount = call_amount, value=new_state.pots[player])) #value has to be stored with the amount your calling TO
 
         return DecisionNode(self, new_state, last_action= act)
@@ -81,7 +79,6 @@ class DecisionNode():
 
         if self.round_over:
             return []
-            # raise Exception('round over')
         
         self.children.append(self._get_call())
 
@@ -148,9 +145,6 @@ class WRInfoSet():
         self.breif_his = True
         self.example_node = example_node
 
-        # print(example_node.pots)
-        # self._init_strat(example_node)
-
     def add_node(self, node):
         if node not in self.nodes:
             self.nodes.append(node)
@@ -168,10 +162,7 @@ class WRInfoSet():
         if len(n_his) != len(self.his):
             return False
 
-        # for i in range(len(self.his)):
         for self_node, n_node in zip(self.his, n_his):
-            # self_node = self.his[i]
-            # n_node = n_his[i]
 
             if type(self_node.inner_node) is not type(n_node.inner_node):
                 return False
@@ -190,10 +181,6 @@ class WRInfoSet():
         for s in self.strat:
             if s[0] == action:
                 return s[1]
-
-        # print(action)
-        # print([str(s[0]) for s in self.strat])
-        # print(self)
 
         raise Exception(f'bad action -- {str(action)} not in {[str(a) for a in self.get_actions()]}')
     

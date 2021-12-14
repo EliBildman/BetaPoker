@@ -1,8 +1,6 @@
 from .RoundNodes import DecisionNode, GameState, ValueNode
 from .WRNodes import Conn, WRNatureNode
 from .AGameNode import AGameNode
-from .decision_tree import build_decision_tree
-from copy import deepcopy
 
 #wraps a decision tree with AGameNodes with a given nature state
 def wrap_d_tree(p1_wr, p2_wr, d_node, parent, leaf_children):
@@ -19,12 +17,10 @@ def wrap_d_tree(p1_wr, p2_wr, d_node, parent, leaf_children):
 
     else:
         #send back value
-        # take = (d_node.gamestate.pots[0] * p1_wr) - (d_node.gamestate.pots[1] * p2_wr) #shitty ev estimation
         if p1_wr == p2_wr:
             take = 0
         else:
             take = d_node.gamestate.pots[0] if p1_wr > p2_wr else -d_node.gamestate.pots[1]
-        # print(take)
 
         v_node = ValueNode(take, d_node.last_action)
         return AGameNode( parent, v_node, [p1_wr, p2_wr] )
@@ -74,10 +70,6 @@ def create_full_gametree(n_tree, d_tree, curr_node = None, parent = None):
             node.add_child(create_full_gametree(c, d_tree, curr_node = c, parent = node))
 
     elif type(curr_node) is WRNatureNode:
-        # global n_natures
-        # n_natures += 1
-        # if n_natures % 100 == 0:
-        #     print(n_natures)
         node = AGameNode(parent, curr_node, [curr_node.p1_wr.wr, curr_node.p2_wr.wr])
         node.add_child(create_full_gametree(curr_node, d_tree, curr_node = d_tree, parent = node))
     
@@ -87,7 +79,6 @@ def create_full_gametree(n_tree, d_tree, curr_node = None, parent = None):
             for c in curr_node.get_children():
                 node.add_child(create_full_gametree(n_tree, d_tree, curr_node = c, parent = node))
         else:
-            # gs = deepcopy(curr_node.gamestate)
             old = curr_node.gamestate
             gs = GameState(old.n_players, old.pots, old.stacks, 0, old.street_i + 1, old.raise_amts, old.num_raises)
             next_round_d_tree = DecisionNode(None, gs)
@@ -98,15 +89,11 @@ def create_full_gametree(n_tree, d_tree, curr_node = None, parent = None):
         node = AGameNode(parent, curr_node, [n_tree.p1_wr.wr, n_tree.p2_wr.wr])
 
     return node
-    
-
 
 def tree_size(n):
     if type(n) is ValueNode:
         return 1
     c = n.get_children()
-    # if not c:
-    #     return 1
     num = 1
     for child in c:
         num += tree_size(child)
